@@ -19,7 +19,6 @@ body {
   min-height: 100vh;
   padding-top: 120px; /* To accommodate fixed header & menu */
   overscroll-behavior: none; /* Prevents scroll background issue */
-  background-blur: 10px;
 }
 
 /* Unified background overlay for header and menu */
@@ -107,7 +106,7 @@ body {
   color: #fff;
   font-size: 14px;
   outline: none;
-  width: 250px; /* Increased width for search box */
+  width: 300px; /* Increased width for search box */
   transition: background 0.3s ease;
 }
 
@@ -226,6 +225,7 @@ body {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%), url("Assets/Images/BG_001.jpg");
   background-size: cover;
   background-position: center;
+  backdrop-filter: blur(10px);
 }
 
 /* Responsive tweaks */
