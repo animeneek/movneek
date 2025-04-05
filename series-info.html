@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://kit.fontawesome.com/8e3f3e5f4e.js" crossorigin="anonymous"></script>
+  <script src="src.html"></script>
 </head>
 <body>
   <!-- Background Overlay (Always Default BG) -->
@@ -165,14 +166,7 @@
     }
 
     function getEmbedLink(src, videoId) {
-      const map = {
-        streamtape: `https://streamtape.com/v/${videoId}`,
-        streamwish: `https://streamwish.to/v/${videoId}`,
-        earnvid: `https://earnvid.com/v/${videoId}`,
-        mp4upload: `https://mp4upload.com/v/${videoId}`,
-        other: `https://other.com/v/${videoId}`
-      };
-      return map[src] || "#";
+      return sourceMap[src] + videoId; // Use sourceMap from src.html
     }
 
     function showLoading() {
