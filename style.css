@@ -295,6 +295,7 @@ main {
 .movie-embed-video {
   margin-bottom: 20px;
   position: relative;
+  height: 600px;
 }
 
 .source-buttons {
@@ -334,7 +335,7 @@ main {
 
 .movie-landscape img {
   width: 100%;
-  height: auto;
+  height: 600px;
   border-radius: 8px;
 }
 
