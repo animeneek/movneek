@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://kit.fontawesome.com/8e3f3e5f4e.js" crossorigin="anonymous"></script>
-  <script src="src.html"></script>
 </head>
 <body>
   <!-- Background Overlay (Always Default BG) -->
@@ -46,6 +45,7 @@
           <select id="season-select-1">
             <option value="" disabled selected>Select Season</option>
           </select>
+          <span>Episode:</span>
           <select id="episode-select-1" disabled>
             <option value="" disabled selected>Select Episode</option>
           </select>
@@ -56,6 +56,7 @@
           <select id="season-select-2">
             <option value="" disabled selected>Select Season</option>
           </select>
+          <span>Episode:</span>
           <select id="episode-select-2" disabled>
             <option value="" disabled selected>Select Episode</option>
           </select>
@@ -89,6 +90,14 @@
     const API_KEY = "e3afd4c89e3351edad9e875ff7a01f0c";
     const IMG_URL = "https://image.tmdb.org/t/p/";
     const FALLBACK_POSTER = "Assets/Images/Black and White Modern Coming soon Poster.png";
+
+    const sourceMap = {
+      streamtape: "https://streamtape.com/v/",
+      streamwish: "https://streamwish.to/v/",
+      earnvid: "https://earnvid.com/v/",
+      mp4upload: "https://mp4upload.com/v/",
+      other: "https://other.com/v/"
+    };
 
     const seriesId = new URLSearchParams(window.location.search).get('id');
     const seriesURL = `https://api.themoviedb.org/3/tv/${seriesId}?api_key=${API_KEY}`;
@@ -166,7 +175,7 @@
     }
 
     function getEmbedLink(src, videoId) {
-      return sourceMap[src] + videoId; // Use sourceMap from src.html
+      return sourceMap[src] + videoId;
     }
 
     function showLoading() {
