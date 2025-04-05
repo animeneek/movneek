@@ -31,9 +31,7 @@
 
       <!-- Embed Video First -->
       <div class="movie-embed-video">
-        <img id="movie-embed-poster" src="" alt="Movie Landscape Poster" />
-        <div class="overlay">The choice is yours… Select the Source below!</div>
-        <iframe id="movie-player" width="100%" height="480" src="" frameborder="0" allowfullscreen style="display: none;"></iframe>
+        <iframe id="movie-player" width="100%" height="480" src="" frameborder="0" allowfullscreen></iframe>
       </div>
 
       <!-- Source Buttons -->
@@ -70,45 +68,70 @@
     const FALLBACK_POSTER = "Assets/Images/Black%20and%20White%20Modern%20Coming%20soon%20Poster.png";
 
     const movieId = new URLSearchParams(window.location.search).get('id');
-    const movieURL = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`;
+    const movieURL = https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY};
 
     fetch(movieURL)
       .then(res => res.json())
       .then(async movie => {
         const movieTitle = document.getElementById("movie-title");
         const movieOverview = document.getElementById("movie-overview");
-        const moviePoster = document.getElementById("movie-poster");
-        const movieBackdropBlur = document.getElementById("movie-backdrop-blur");
         const releaseDate = document.getElementById("release-date");
         const rating = document.getElementById("rating");
         const genres = document.getElementById("genres");
         const language = document.getElementById("language");
+        const moviePoster = document.getElementById("movie-poster");
 
-        movieTitle.innerText = movie.title;
-        movieOverview.innerText = movie.overview || "No description available";
-        moviePoster.src = movie.poster_path ? IMG_URL + "w500" + movie.poster_path : FALLBACK_POSTER;
-        movieBackdropBlur.style.backgroundImage = `url(${IMG_URL}w1280${movie.backdrop_path})`;
+        movieTitle.textContent = movie.title || movie.name;
+        movieOverview.textContent = movie.overview || "No description available.";
+        releaseDate.textContent = movie.release_date || "N/A";
+        rating.textContent = movie.vote_average || "N/A";
+        language.textContent = movie.original_language?.toUpperCase() || "N/A";
+        genres.textContent = movie.genres.map(genre => genre.name).join(", ") || "N/A";
 
-        releaseDate.innerText = movie.release_date;
-        rating.innerText = movie.vote_average;
-        genres.innerText = movie.genres.map(genre => genre.name).join(", ");
-        language.innerText = movie.original_language;
+        // Set Poster (Portrait)
+        moviePoster.src = movie.poster_path ? IMG_URL + "w342" + movie.poster_path : FALLBACK_POSTER;
 
-        // Video Sources (vidsrc.to, embed.su, etc.)
-        const sourceButtons = document.getElementById("source-buttons");
-        const sources = await fetch('https://raw.githubusercontent.com/animeneek/MovieNeek/main/MovieNeek.json')
-          .then(res => res.json());
+        // Set Backdrop (Blurred Background)
+        if (movie.backdrop_path) {
+          document.getElementById("movie-backdrop-blur").style.backgroundImage = url(${IMG_URL}w780${movie.backdrop_path});
+        }
 
-        sources.forEach(source => {
-          const button = document.createElement("button");
-          button.innerText = source.label;
-          button.onclick = () => {
-            document.getElementById('movie-player').style.display = "block";
-            document.getElementById('movie-player').src = source.url;
+        // Source buttons
+        document.getElementById("source1-button").onclick = () => {
+          document.getElementById("movie-player").src = https://vidsrc.to/embed/movie/${movieId};
+        };
+
+        document.getElementById("source2-button").onclick = () => {
+          document.getElementById("movie-player").src = https://embed.su/embed/movie/${movieId};
+        };
+
+        const extraSources = await fetchAdditionalSources(movieId);
+        extraSources.forEach(source => {
+          const btn = document.createElement("button");
+          btn.textContent = source.title;
+          btn.onclick = () => {
+            document.getElementById("movie-player").src = getEmbedLink(source.SRC, source.VIDEOID);
           };
-          sourceButtons.appendChild(button);
+          document.getElementById("additional-sources").appendChild(btn);
         });
       });
+
+    async function fetchAdditionalSources(id) {
+      const res = await fetch("https://raw.githubusercontent.com/animeneek/MovieNeek/main/MovieNeek.json");
+      const data = await res.json();
+      return data.filter(item => item.TMDBID == id && item.Class == "movie");
+    }
+
+    function getEmbedLink(src, videoId) {
+      const map = {
+        streamtape: https://streamtape.com/v/${videoId},
+        streamwish: https://streamwish.to/v/${videoId},
+        earnvid: https://earnvid.com/v/${videoId},
+        mp4upload: https://mp4upload.com/v/${videoId},
+        other: https://other.com/v/${videoId}
+      };
+      return map[src] || "#";
+    }
   </script>
 </body>
 </html>
