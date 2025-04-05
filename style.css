@@ -294,9 +294,12 @@ main {
 
 .movie-embed-video {
   margin-bottom: 20px;
+  position: relative;
 }
 
 .source-buttons {
+  display: flex;
+  justify-content: center;
   margin-bottom: 30px;
 }
 
@@ -323,14 +326,27 @@ main {
   flex-wrap: wrap;
 }
 
-.movie-poster {
-  flex: 0 0 200px;
+.movie-landscape {
+  position: relative;
+  text-align: center;
+  color: white;
 }
 
-.movie-poster img {
+.movie-landscape img {
   width: 100%;
   height: auto;
-  border-radius: 10px;
+  border-radius: 8px;
+}
+
+.landscape-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 8px;
 }
 
 .movie-details {
