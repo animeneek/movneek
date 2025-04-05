@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Source Mapping</title>
+</head>
+<body>
+  <script>
+    const sourceMap = {
+      streamtape: "https://streamtape.com/v/",
+      streamwish: "https://streamwish.to/v/",
+      earnvid: "https://earnvid.com/v/",
+      mp4upload: "https://mp4upload.com/v/",
+      other: "https://other.com/v/"
+    };
+
+    function getEmbedLink(src, videoId) {
+      return sourceMap[src] + videoId;
+    }
+  </script>
+</body>
+</html>
