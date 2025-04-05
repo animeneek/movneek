@@ -1,40 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MovNeek - Movie Stream</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <title>MovNeek - Home</title>
+  <link rel="icon" href="Assets/Images/MN_Favi.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
-<body>
-  <div class="overlay"></div>
-  <header>
-    <h1>🎬 MovNeek</h1>
-    <p>Your personal movie streaming site</p>
-  </header>
+<body style="background-image: url('Assets/Images/BG_001.jpg'); background-size: cover; background-position: center;">
+
+  <!-- Header and Menu will load via JS -->
 
   <main>
-    <section id="movies" class="movie-grid">
-      <!-- Movies will appear here -->
+    <section class="slider-section">
+      <h2>🔥 Trending Now</h2>
+      <div class="swiper trendingSlider">
+        <div class="swiper-wrapper" id="trendingSliderContent">
+          <!-- JS will populate this -->
+        </div>
+      </div>
+    </section>
+
+    <section class="slider-section">
+      <h2>🆕 What's New</h2>
+      <div class="swiper newSlider">
+        <div class="swiper-wrapper" id="newSliderContent">
+          <!-- JS will populate this -->
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer>
-    <p>Made by animeneek | Powered by TMDB</p>
-  </footer>
-
   <script src="script.js"></script>
-  
   <script>
-  // Load header and menu
-  fetch("header.html")
-    .then(res => res.text())
-    .then(data => document.body.insertAdjacentHTML("afterbegin", data));
-
-  fetch("menu.html")
-    .then(res => res.text())
-    .then(data => document.body.insertAdjacentHTML("afterbegin", data));
-</script>
-
+    fetch("header.html").then(res => res.text()).then(data => document.body.insertAdjacentHTML("afterbegin", data));
+    fetch("menu.html").then(res => res.text()).then(data => document.body.insertAdjacentHTML("afterbegin", data));
+  </script>
 </body>
 </html>
