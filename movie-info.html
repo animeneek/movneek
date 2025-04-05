@@ -3,47 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Movie Info</title>
+  <title>Movie Information</title>
   <link rel="icon" href="Assets/Images/MN_Favi.png" type="image/png" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://kit.fontawesome.com/8e3f3e5f4e.js" crossorigin="anonymous"></script>
 </head>
 <body>
+  <!-- Background -->
   <div class="background-overlay"></div>
 
-  <main class="info-page">
-    <div class="info-container" id="movie-details">
-      <!-- Content will be populated with JS -->
-    </div>
+  <!-- Load header and menu -->
+  <script>
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => document.body.insertAdjacentHTML("afterbegin", data));
+
+    fetch("menu.html")
+      .then(res => res.text())
+      .then(data => document.body.insertAdjacentHTML("afterbegin", data));
+  </script>
+
+  <main>
+    <section class="movie-info-section">
+      <div class="movie-embed-video">
+        <div id="embed-video-container">
+          <iframe id="movie-player" width="100%" height="480" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div id="source-buttons">
+          <button id="source1-button">Source 1</button>
+          <button id="source2-button">Source 2</button>
+        </div>
+      </div>
+
+      <div class="movie-details">
+        <h2 id="movie-title"></h2>
+        <p id="movie-overview"></p>
+
+        <div id="additional-sources"></div>
+
+        <div id="movie-info">
+          <p><strong>Release Date:</strong> <span id="release-date"></span></p>
+          <p><strong>Rating:</strong> <span id="rating"></span></p>
+          <p><strong>Genres:</strong> <span id="genres"></span></p>
+          <p><strong>Language:</strong> <span id="language"></span></p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script>
     const API_KEY = "e3afd4c89e3351edad9e875ff7a01f0c";
     const IMG_URL = "https://image.tmdb.org/t/p/w500";
-    const FALLBACK_POSTER = "Assets/Images/Black and White Modern Coming soon Poster.png";
+    const FALLBACK_POSTER = "Assets/Images/Black%20and%20White%20Modern%20Coming%20soon%20Poster.png";
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const movieId = urlParams.get("id");
+    const movieId = new URLSearchParams(window.location.search).get('id');
+    const movieURL = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`;
 
-    fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`)
+    fetch(movieURL)
       .then(res => res.json())
       .then(movie => {
-        const container = document.getElementById("movie-details");
-        container.innerHTML = `
-          <div class="info-poster">
-            <img src="${movie.poster_path ? IMG_URL + movie.poster_path : FALLBACK_POSTER}" alt="${movie.title}">
-          </div>
-          <div class="info-text">
-            <h1>${movie.title}</h1>
-            <p><strong>Release Date:</strong> ${movie.release_date}</p>
-            <p>${movie.overview}</p>
-            <div class="video-embed">
-              <iframe src="https://vidsrc.to/embed/movie/${movieId}" frameborder="0" allowfullscreen></iframe>
-            </div>
-          </div>
-        `;
+        const movieTitle = document.getElementById("movie-title");
+        const movieOverview = document.getElementById("movie-overview");
+        const releaseDate = document.getElementById("release-date");
+        const rating = document.getElementById("rating");
+        const genres = document.getElementById("genres");
+        const language = document.getElementById("language");
+        
+        // Set movie details
+        movieTitle.textContent = movie.title || movie.name;
+        movieOverview.textContent = movie.overview || "No description available.";
+        releaseDate.textContent = movie.release_date || "N/A";
+        rating.textContent = movie.vote_average || "N/A";
+        language.textContent = movie.original_language.toUpperCase() || "N/A";
+        genres.textContent = movie.genres.map(genre => genre.name).join(", ") || "N/A";
+
+        // Set poster and background
+        const poster = movie.poster_path ? IMG_URL + movie.poster_path : FALLBACK_POSTER;
+        document.querySelector('.movie-info-section').style.backgroundImage = `url(${poster})`;
+
+        // Dynamic Sources
+        const additionalSources = movie.TMDBID ? fetchAdditionalSources(movie.TMDBID) : [];
+
+        const source1Button = document.getElementById("source1-button");
+        const source2Button = document.getElementById("source2-button");
+
+        source1Button.onclick = () => {
+          const source1URL = `https://vidsrc.to/embed/movie/${movieId}`;
+          document.getElementById("movie-player").src = source1URL;
+        };
+
+        source2Button.onclick = () => {
+          const source2URL = `https://embed.su/embed/movie/${movieId}`;
+          document.getElementById("movie-player").src = source2URL;
+        };
+
+        additionalSources.forEach((source, index) => {
+          const sourceButton = document.createElement("button");
+          sourceButton.textContent = source.title;
+          sourceButton.onclick = () => {
+            const embedLink = getEmbedLink(source.SRC, source.VIDEOID);
+            document.getElementById("movie-player").src = embedLink;
+          };
+          document.getElementById("additional-sources").appendChild(sourceButton);
+        });
       });
+
+    // Fetch additional sources from MovieNeek.json
+    function fetchAdditionalSources(movieId) {
+      return fetch('https://raw.githubusercontent.com/animeneek/MovieNeek/main/MovieNeek.json')
+        .then(res => res.json())
+        .then(data => {
+          return data.filter(item => item.TMDBID == movieId && item.Class == "movie");
+        });
+    }
+
+    // Map SRC to the respective embed link
+    function getEmbedLink(src, videoId) {
+      switch (src) {
+        case "streamtape":
+          return `https://streamtape.com/v/${videoId}`;
+        case "streamwish":
+          return `https://streamwish.to/v/${videoId}`;
+        case "earnvid":
+          return `https://earnvid.com/v/${videoId}`;
+        case "mp4upload":
+          return `https://mp4upload.com/v/${videoId}`;
+        case "other":
+          return `https://other.com/v/${videoId}`;
+        default:
+          return "#";
+      }
+    }
   </script>
 </body>
 </html>
