@@ -30,7 +30,7 @@
       <div class="movie-backdrop-blur" id="movie-backdrop-blur"></div>
 
       <!-- Embed Video First -->
-      <div class="movie-embed-video">
+      <div class="movie-embed-video" id="embed-video-container">
         <div id="movie-landscape" class="movie-landscape">
           <img id="landscape-image" src="" alt="Movie Landscape" />
           <div id="landscape-text" class="landscape-text">The choice is yours… Select the Source below!</div>
@@ -45,8 +45,12 @@
         <div id="additional-sources"></div>
       </div>
 
-      <!-- Movie Info Container (Removed Poster) -->
+      <!-- Poster & Info -->
       <div class="movie-info-container">
+        <div class="movie-poster">
+          <img id="movie-poster" src="" alt="Movie Poster" />
+        </div>
+
         <div class="movie-details">
           <h2 id="movie-title"></h2>
           <p id="movie-overview"></p>
@@ -79,6 +83,7 @@
       const rating = document.getElementById("rating");
       const genres = document.getElementById("genres");
       const language = document.getElementById("language");
+      const moviePoster = document.getElementById("movie-poster");
       const landscapeImage = document.getElementById("landscape-image");
 
       movieTitle.textContent = movie.title || movie.name;
@@ -87,6 +92,9 @@
       rating.textContent = movie.vote_average || "N/A";
       language.textContent = movie.original_language?.toUpperCase() || "N/A";
       genres.textContent = movie.genres?.map(genre => genre.name).join(", ") || "N/A";
+
+      // Poster
+      moviePoster.src = movie.poster_path ? IMG_URL + "w342" + movie.poster_path : FALLBACK_POSTER;
 
       // Landscape Image
       landscapeImage.src = movie.backdrop_path ? IMG_URL + "w780" + movie.backdrop_path : FALLBACK_POSTER;
@@ -101,12 +109,14 @@
         showLoading();
         document.getElementById("movie-player").src = `https://vidsrc.to/embed/movie/${movieId}`;
         document.getElementById("movie-player").style.display = "block";
+        document.getElementById("movie-landscape").style.display = "none";
       };
 
       document.getElementById("source2-button").onclick = () => {
         showLoading();
         document.getElementById("movie-player").src = `https://embed.su/embed/movie/${movieId}`;
         document.getElementById("movie-player").style.display = "block";
+        document.getElementById("movie-landscape").style.display = "none";
       };
 
       // Extra sources
@@ -118,6 +128,7 @@
           showLoading();
           document.getElementById("movie-player").src = getEmbedLink(source.SRC, source.VIDEOID);
           document.getElementById("movie-player").style.display = "block";
+          document.getElementById("movie-landscape").style.display = "none";
         };
         document.getElementById("additional-sources").appendChild(btn);
       });
