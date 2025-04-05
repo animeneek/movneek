@@ -364,3 +364,13 @@ main {
   font-size: 16px;
   line-height: 1.6;
 }
+
+.movie-poster {
+  flex: 0 0 200px;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
