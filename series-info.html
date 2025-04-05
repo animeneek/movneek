@@ -3,47 +3,218 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Series Info</title>
+  <title>Series Information</title>
   <link rel="icon" href="Assets/Images/MN_Favi.png" type="image/png" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <script src="https://kit.fontawesome.com/8e3f3e5f4e.js" crossorigin="anonymous"></script>
 </head>
 <body>
+  <!-- Background Overlay (Always Default BG) -->
   <div class="background-overlay"></div>
 
-  <main class="info-page">
-    <div class="info-container" id="series-details">
-      <!-- Content will be populated with JS -->
-    </div>
+  <!-- Load header and menu -->
+  <script>
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => document.body.insertAdjacentHTML("afterbegin", data));
+
+    fetch("menu.html")
+      .then(res => res.text())
+      .then(data => document.body.insertAdjacentHTML("afterbegin", data));
+  </script>
+
+  <main>
+    <section class="series-info-section">
+      <!-- Dynamic blurred backdrop set by JS -->
+      <div class="series-backdrop-blur" id="series-backdrop-blur"></div>
+
+      <!-- Embed Video First -->
+      <div class="series-embed-video" id="embed-video-container">
+        <div id="series-landscape" class="series-landscape">
+          <img id="landscape-image" src="" alt="Series Landscape" />
+          <div id="landscape-text" class="landscape-text">The choice is yours… Select the Source below!</div>
+        </div>
+        <iframe id="series-player" width="100%" height="480" src="" frameborder="0" allowfullscreen style="display: none;"></iframe>
+      </div>
+
+      <!-- Source Buttons -->
+      <div class="source-buttons" id="source-buttons">
+        <div>
+          <span>Source 1:</span>
+          <select id="season-select-1">
+            <option value="" disabled selected>Select Season</option>
+          </select>
+          <select id="episode-select-1" disabled>
+            <option value="" disabled selected>Select Episode</option>
+          </select>
+          <button id="play-button-1" disabled>Play</button>
+        </div>
+        <div>
+          <span>Source 2:</span>
+          <select id="season-select-2">
+            <option value="" disabled selected>Select Season</option>
+          </select>
+          <select id="episode-select-2" disabled>
+            <option value="" disabled selected>Select Episode</option>
+          </select>
+          <button id="play-button-2" disabled>Play</button>
+        </div>
+        <div id="additional-sources"></div>
+      </div>
+
+      <!-- Poster & Info -->
+      <div class="series-info-container">
+        <div class="series-poster">
+          <img id="series-poster" src="" alt="Series Poster" />
+        </div>
+
+        <div class="series-details">
+          <h2 id="series-title"></h2>
+          <p id="series-overview"></p>
+
+          <div id="series-info">
+            <p><strong>Release Date:</strong> <span id="release-date"></span></p>
+            <p><strong>Rating:</strong> <span id="rating"></span></p>
+            <p><strong>Genres:</strong> <span id="genres"></span></p>
+            <p><strong>Language:</strong> <span id="language"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script>
     const API_KEY = "e3afd4c89e3351edad9e875ff7a01f0c";
-    const IMG_URL = "https://image.tmdb.org/t/p/w500";
+    const IMG_URL = "https://image.tmdb.org/t/p/";
     const FALLBACK_POSTER = "Assets/Images/Black and White Modern Coming soon Poster.png";
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const seriesId = urlParams.get("id");
+    const seriesId = new URLSearchParams(window.location.search).get('id');
+    const seriesURL = `https://api.themoviedb.org/3/tv/${seriesId}?api_key=${API_KEY}`;
 
-    fetch(`https://api.themoviedb.org/3/tv/${seriesId}?api_key=${API_KEY}&language=en-US`)
+    fetch(seriesURL)
       .then(res => res.json())
-      .then(series => {
-        const container = document.getElementById("series-details");
-        container.innerHTML = `
-          <div class="info-poster">
-            <img src="${series.poster_path ? IMG_URL + series.poster_path : FALLBACK_POSTER}" alt="${series.name}">
-          </div>
-          <div class="info-text">
-            <h1>${series.name}</h1>
-            <p><strong>First Air Date:</strong> ${series.first_air_date}</p>
-            <p>${series.overview}</p>
-            <div class="video-embed">
-              <iframe src="https://vidsrc.to/embed/tv/${seriesId}" frameborder="0" allowfullscreen></iframe>
-            </div>
-          </div>
-        `;
+      .then(async series => {
+        const seriesTitle = document.getElementById("series-title");
+        const seriesOverview = document.getElementById("series-overview");
+        const releaseDate = document.getElementById("release-date");
+        const rating = document.getElementById("rating");
+        const genres = document.getElementById("genres");
+        const language = document.getElementById("language");
+        const seriesPoster = document.getElementById("series-poster");
+        const landscapeImage = document.getElementById("landscape-image");
+
+        seriesTitle.textContent = series.name;
+        seriesOverview.textContent = series.overview || "No description available.";
+        releaseDate.textContent = series.first_air_date || "N/A";
+        rating.textContent = series.vote_average || "N/A";
+        language.textContent = series.original_language?.toUpperCase() || "N/A";
+        genres.textContent = series.genres?.map(genre => genre.name).join(", ") || "N/A";
+
+        // Poster
+        seriesPoster.src = series.poster_path ? IMG_URL + "w342" + series.poster_path : FALLBACK_POSTER;
+
+        // Landscape Image
+        landscapeImage.src = series.backdrop_path ? IMG_URL + "w780" + series.backdrop_path : FALLBACK_POSTER;
+
+        // Background
+        if (series.backdrop_path) {
+          document.getElementById("series-backdrop-blur").style.backgroundImage = `url(${IMG_URL}w780${series.backdrop_path})`;
+        }
+
+        // Populate season dropdowns
+        const seasonSelect1 = document.getElementById("season-select-1");
+        const seasonSelect2 = document.getElementById("season-select-2");
+        series.seasons.forEach(season => {
+          const option1 = document.createElement("option");
+          option1.value = season.season_number;
+          option1.textContent = season.name;
+          seasonSelect1.appendChild(option1);
+
+          const option2 = document.createElement("option");
+          option2.value = season.season_number;
+          option2.textContent = season.name;
+          seasonSelect2.appendChild(option2);
+        });
+
+        seasonSelect1.addEventListener("change", () => loadEpisodes(seasonSelect1, "episode-select-1", "play-button-1"));
+        seasonSelect2.addEventListener("change", () => loadEpisodes(seasonSelect2, "episode-select-2", "play-button-2"));
+
+        // Extra sources
+        const extraSources = await fetchAdditionalSources(seriesId);
+        extraSources.forEach(source => {
+          const btn = document.createElement("button");
+          btn.textContent = source.label || source.title;
+          btn.onclick = () => {
+            showLoading();
+            document.getElementById("series-player").src = getEmbedLink(source.SRC, source.VIDEOID);
+            document.getElementById("series-player").style.display = "block";
+            document.getElementById("series-landscape").style.display = "none";
+          };
+          document.getElementById("additional-sources").appendChild(btn);
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching series data:", error);
       });
+
+    async function fetchAdditionalSources(id) {
+      const res = await fetch("https://raw.githubusercontent.com/animeneek/MovieNeek/main/MovieNeek.json");
+      const data = await res.json();
+      return data.filter(item => item.TMDBID == id && item.Class == "series");
+    }
+
+    function getEmbedLink(src, videoId) {
+      const map = {
+        streamtape: `https://streamtape.com/v/${videoId}`,
+        streamwish: `https://streamwish.to/v/${videoId}`,
+        earnvid: `https://earnvid.com/v/${videoId}`,
+        mp4upload: `https://mp4upload.com/v/${videoId}`,
+        other: `https://other.com/v/${videoId}`
+      };
+      return map[src] || "#";
+    }
+
+    function showLoading() {
+      document.getElementById("landscape-text").textContent = "Loading...";
+    }
+
+    function loadEpisodes(seasonSelect, episodeSelectId, playButtonId) {
+      const seasonNumber = seasonSelect.value;
+      const episodeSelect = document.getElementById(episodeSelectId);
+      const playButton = document.getElementById(playButtonId);
+      episodeSelect.innerHTML = '<option value="" disabled selected>Select Episode</option>';
+      episodeSelect.disabled = true;
+      playButton.disabled = true;
+
+      fetch(`https://api.themoviedb.org/3/tv/${seriesId}/season/${seasonNumber}?api_key=${API_KEY}`)
+        .then(res => res.json())
+        .then(season => {
+          season.episodes.forEach(episode => {
+            const option = document.createElement("option");
+            option.value = episode.episode_number;
+            option.textContent = episode.name;
+            episodeSelect.appendChild(option);
+          });
+          episodeSelect.disabled = false;
+
+          episodeSelect.addEventListener("change", () => {
+            playButton.disabled = false;
+            playButton.onclick = () => {
+              const episodeNumber = episodeSelect.value;
+              const source = episodeSelectId === "episode-select-1" ? 1 : 2;
+              const embedURL = source === 1 ? `https://vidsrc.to/embed/tv/${seriesId}/${seasonNumber}/${episodeNumber}` : `https://embed.su/embed/tv/${seriesId}/${seasonNumber}/${episodeNumber}`;
+              showLoading();
+              document.getElementById("series-player").src = embedURL;
+              document.getElementById("series-player").style.display = "block";
+              document.getElementById("series-landscape").style.display = "none";
+            };
+          });
+        })
+        .catch(error => {
+          console.error("Error fetching episodes:", error);
+        });
+    }
   </script>
 </body>
 </html>
