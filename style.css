@@ -19,9 +19,10 @@ body {
   min-height: 100vh;
   padding-top: 120px; /* To accommodate fixed header & menu */
   overscroll-behavior: none; /* Prevents scroll background issue */
+  background-blur: 10px;
 }
 
-/* Unified blur overlay for header and menu */
+/* Unified background overlay for header and menu */
 .background-overlay {
   position: fixed;
   top: 0;
@@ -30,7 +31,7 @@ body {
   height: 160px; /* Increased height for overlay */
   backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.6);
-  z-index: 1; /* Corrected z-index for proper layering */
+  z-index: 1;
 }
 
 /* Header */
@@ -170,11 +171,12 @@ main {
 .movie-card {
   flex: 0 0 auto;
   width: 150px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, scale 0.3s ease;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   overflow: hidden;
   text-align: center;
+  position: relative;
 }
 
 .movie-card img {
@@ -193,6 +195,37 @@ main {
 
 .movie-card:hover {
   transform: scale(1.05);
+  z-index: 2;
+}
+
+/* Title container under movie poster */
+.movie-card span {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 14px;
+  padding: 5px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Poster hover zoom - fix the container size */
+.movie-card:hover img {
+  transform: scale(1.1);
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+/* Background blur effect */
+body {
+  position: relative;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%), url("Assets/Images/BG_001.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
 /* Responsive tweaks */
