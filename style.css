@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden;
+  background: transparent;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #ffffff;
@@ -12,30 +17,30 @@ body {
   background-size: cover;
   position: relative;
   min-height: 100vh;
-  padding-top: 120px; /* To accommodate fixed header & menu */
+  padding-top: 120px;
+  overscroll-behavior: contain; /* Prevents scroll background issue */
 }
 
-/* Blur overlay background */
+/* Unified blur overlay for header + menu */
 .background-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.6);
   z-index: -1;
 }
 
-/* Header (logo) */
+/* Header */
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 80px;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,21 +52,22 @@ body {
   object-fit: contain;
 }
 
-/* Menu */
+/* Menu bar */
 .site-menu {
   position: fixed;
   top: 80px;
   left: 0;
   width: 100%;
-  height: 40px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: auto;
+  padding: 10px 0;
+  background: transparent;
   z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Menu links */
 .site-menu ul {
   list-style: none;
   display: flex;
@@ -73,54 +79,46 @@ body {
   text-decoration: none;
   font-size: 16px;
   transition: color 0.2s;
-}
-
-.site-menu li a i {
-  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .site-menu li a:hover {
   color: #ffcc00;
 }
 
-/* Search box */
-.search-box {
-  margin-left: 30px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.site-menu li a i {
+  font-size: 16px;
 }
 
-.search-box input {
-  padding: 6px 10px;
-  border-radius: 4px;
-  border: none;
-  font-size: 14px;
-  outline: none;
+/* Search icon only (white magnifier) */
+.search-box {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
 }
 
 .search-box button {
-  padding: 6px 10px;
-  background: #ffcc00;
-  color: #000;
+  background: none;
   border: none;
-  border-radius: 4px;
+  color: white;
+  font-size: 18px;
   cursor: pointer;
-  font-size: 14px;
 }
 
-.search-box button i {
-  font-size: 14px;
-}
-
-/* Main content */
+/* Main content spacing */
 main {
   padding: 40px 20px;
+  margin-top: 60px;
 }
 
-/* Slider sections */
+/* Section containers */
 .slider-section {
   margin-bottom: 50px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
 }
 
 .slider-section h2 {
@@ -129,10 +127,10 @@ main {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #ffcc00;
+  color: white;
 }
 
-/* Movie slider grid */
+/* Sliders */
 .slider {
   display: flex;
   overflow-x: auto;
@@ -144,23 +142,35 @@ main {
   display: none;
 }
 
+/* Movie card with title */
 .movie-card {
   flex: 0 0 auto;
   width: 150px;
   transition: transform 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
 }
 
 .movie-card img {
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.movie-card span {
+  display: block;
+  padding: 8px 5px;
+  font-size: 14px;
+  color: #fff;
 }
 
 .movie-card:hover {
   transform: scale(1.05);
 }
 
-/* Responsive */
+/* Responsive tweaks */
 @media (max-width: 768px) {
   .site-menu ul {
     gap: 15px;
