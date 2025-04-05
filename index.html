@@ -24,5 +24,17 @@
   </footer>
 
   <script src="script.js"></script>
+  
+  <script>
+  // Load header and menu
+  fetch("header.html")
+    .then(res => res.text())
+    .then(data => document.body.insertAdjacentHTML("afterbegin", data));
+
+  fetch("menu.html")
+    .then(res => res.text())
+    .then(data => document.body.insertAdjacentHTML("afterbegin", data));
+</script>
+
 </body>
 </html>
