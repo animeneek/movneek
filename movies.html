@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movies - MovNeek</title>
+  <link rel="icon" href="Assets/Images/MN_Favi.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body style="background-image: url('Assets/Images/BG_001.jpg'); background-size: cover;">
+
+  <div id="content">
+    <!-- Movies content will go here -->
+    <h1>Movies</h1>
+    <div id="moviesList"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    fetch("header.html").then(res => res.text()).then(data => document.body.insertAdjacentHTML("afterbegin", data));
+    fetch("menu.html").then(res => res.text()).then(data => document.body.insertAdjacentHTML("afterbegin", data));
+  </script>
+</body>
+</html>
