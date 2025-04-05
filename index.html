@@ -3,34 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MovieNeek v13.03</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>MovieNeek v13.14</title>
   <link rel="icon" href="Assets/Images/MN_Favi.png" type="image/png" />
+  <link rel="stylesheet" href="style.css" />
   <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- HEADER AND MENU LOAD HERE -->
-  <div id="header"></div>
-  <div id="menu"></div>
+
+  <!-- EMBEDDED HEADER -->
+  <iframe src="header.html" class="embed-frame" scrolling="no" frameborder="0"></iframe>
+
+  <!-- EMBEDDED MENU -->
+  <iframe src="menu.html" class="embed-frame" scrolling="no" frameborder="0"></iframe>
 
   <!-- MAIN CONTENT -->
   <main>
     <section class="slider-section">
       <h2><i class="fas fa-fire"></i> Trending Now</h2>
       <div class="swiper-container" id="trending-slider">
-        <div class="swiper-wrapper"></div>
+        <div class="swiper-wrapper">
+          <!-- Movie cards will be inserted here -->
+        </div>
       </div>
     </section>
 
     <section class="slider-section">
       <h2><i class="fas fa-star"></i> What's New</h2>
       <div class="swiper-container" id="new-slider">
-        <div class="swiper-wrapper"></div>
+        <div class="swiper-wrapper">
+          <!-- Movie cards will be inserted here -->
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- SCRIPTS -->
   <script src="script.js"></script>
 </body>
 </html>
