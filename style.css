@@ -171,6 +171,7 @@ main {
 .movie-card {
   flex: 0 0 auto;
   width: 150px;
+  height: 280px; /* ✅ Fixed height for consistency */
   transition: transform 0.3s ease;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
@@ -178,6 +179,9 @@ main {
   text-align: center;
   position: relative;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .movie-card img {
@@ -190,12 +194,18 @@ main {
 
 /* Title under poster */
 .movie-card .title {
-  display: block;
   font-size: 14px;
   padding: 8px 5px;
   color: #fff;
   background: rgba(0, 0, 0, 0.6);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  height: 55px; /* ✅ Enough for up to 2 lines */
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* ✅ Limit to 2 lines */
+  -webkit-box-orient: vertical;
 }
 
 /* Hover zoom on entire card */
