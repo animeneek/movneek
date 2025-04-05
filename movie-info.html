@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie Info</title>
+  <link rel="icon" href="Assets/Images/MN_Favi.png" type="image/png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <script src="https://kit.fontawesome.com/8e3f3e5f4e.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="background-overlay"></div>
+
+  <main class="info-page">
+    <div class="info-container" id="movie-details">
+      <!-- Content will be populated with JS -->
+    </div>
+  </main>
+
+  <script>
+    const API_KEY = "e3afd4c89e3351edad9e875ff7a01f0c";
+    const IMG_URL = "https://image.tmdb.org/t/p/w500";
+    const FALLBACK_POSTER = "Assets/Images/Black and White Modern Coming soon Poster.png";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = urlParams.get("id");
+
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`)
+      .then(res => res.json())
+      .then(movie => {
+        const container = document.getElementById("movie-details");
+        container.innerHTML = `
+          <div class="info-poster">
+            <img src="${movie.poster_path ? IMG_URL + movie.poster_path : FALLBACK_POSTER}" alt="${movie.title}">
+          </div>
+          <div class="info-text">
+            <h1>${movie.title}</h1>
+            <p><strong>Release Date:</strong> ${movie.release_date}</p>
+            <p>${movie.overview}</p>
+            <div class="video-embed">
+              <iframe src="https://vidsrc.to/embed/movie/${movieId}" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
+        `;
+      });
+  </script>
+</body>
+</html>
