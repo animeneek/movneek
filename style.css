@@ -161,6 +161,7 @@ main {
   overflow-x: auto;
   gap: 12px;
   padding-bottom: 10px;
+  padding-top: 15px;
 }
 
 .slider::-webkit-scrollbar {
