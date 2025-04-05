@@ -27,10 +27,10 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 120px; /* Combined height of header and menu */
+  height: 160px; /* Increased height for overlay */
   backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.6);
-  z-index: 999;
+  z-index: 1; /* Corrected z-index for proper layering */
 }
 
 /* Header */
@@ -99,14 +99,14 @@ body {
 }
 
 .search-box input {
-  padding: 8px 15px;
+  padding: 10px 20px;
   border-radius: 20px;
   border: 1px solid #fff;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   font-size: 14px;
   outline: none;
-  width: 200px;
+  width: 250px; /* Increased width for search box */
   transition: background 0.3s ease;
 }
 
