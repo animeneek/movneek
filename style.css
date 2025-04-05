@@ -267,7 +267,7 @@ main {
 
 .video-embed iframe {
   width: 100%;
-  height: 450px;
+  height: 600px; /* Increased height for better view */
   border-radius: 8px;
 }
 
@@ -295,7 +295,15 @@ main {
 .movie-embed-video {
   margin-bottom: 20px;
   position: relative;
-  height: 600px;
+  width: 100%;
+  height: 600px; /* Ensure the same size as the video */
+}
+
+.movie-embed-video img,
+#movie-player {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
 }
 
 .source-buttons {
@@ -335,7 +343,17 @@ main {
 
 .movie-landscape img {
   width: 100%;
-  height: 600px;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.landscape-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 8px;
 }
 
@@ -345,7 +363,6 @@ main {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 24px;
-  background: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 8px;
 }
