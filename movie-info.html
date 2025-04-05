@@ -26,27 +26,38 @@
 
   <main>
     <section class="movie-info-section">
-      <div class="movie-embed-video">
-        <div id="embed-video-container">
-          <iframe id="movie-player" width="100%" height="480" src="" frameborder="0" allowfullscreen></iframe>
+      <div class="movie-info-container">
+        <!-- Poster Section -->
+        <div class="movie-poster">
+          <img id="movie-poster" src="" alt="Movie Poster" />
         </div>
-        <div id="source-buttons">
-          <button id="source1-button">Source 1</button>
-          <button id="source2-button">Source 2</button>
+
+        <!-- Movie Details Section -->
+        <div class="movie-details">
+          <h2 id="movie-title"></h2>
+          <p id="movie-overview"></p>
+
+          <div id="source-buttons">
+            <button id="source1-button">Source 1</button>
+            <button id="source2-button">Source 2</button>
+          </div>
+
+          <!-- Additional Sources -->
+          <div id="additional-sources"></div>
+
+          <div id="movie-info">
+            <p><strong>Release Date:</strong> <span id="release-date"></span></p>
+            <p><strong>Rating:</strong> <span id="rating"></span></p>
+            <p><strong>Genres:</strong> <span id="genres"></span></p>
+            <p><strong>Language:</strong> <span id="language"></span></p>
+          </div>
         </div>
       </div>
 
-      <div class="movie-details">
-        <h2 id="movie-title"></h2>
-        <p id="movie-overview"></p>
-
-        <div id="additional-sources"></div>
-
-        <div id="movie-info">
-          <p><strong>Release Date:</strong> <span id="release-date"></span></p>
-          <p><strong>Rating:</strong> <span id="rating"></span></p>
-          <p><strong>Genres:</strong> <span id="genres"></span></p>
-          <p><strong>Language:</strong> <span id="language"></span></p>
+      <!-- Embed Video Section -->
+      <div class="movie-embed-video">
+        <div id="embed-video-container">
+          <iframe id="movie-player" width="100%" height="480" src="" frameborder="0" allowfullscreen></iframe>
         </div>
       </div>
     </section>
@@ -69,7 +80,8 @@
         const rating = document.getElementById("rating");
         const genres = document.getElementById("genres");
         const language = document.getElementById("language");
-        
+        const moviePoster = document.getElementById("movie-poster");
+
         // Set movie details
         movieTitle.textContent = movie.title || movie.name;
         movieOverview.textContent = movie.overview || "No description available.";
@@ -80,7 +92,8 @@
 
         // Set poster and background
         const poster = movie.poster_path ? IMG_URL + movie.poster_path : FALLBACK_POSTER;
-        document.querySelector('.movie-info-section').style.backgroundImage = `url(${poster})`;
+        moviePoster.src = poster;
+        document.querySelector('.movie-poster').style.backgroundImage = `url(${poster})`;
 
         // Dynamic Sources
         const additionalSources = movie.TMDBID ? fetchAdditionalSources(movie.TMDBID) : [];
