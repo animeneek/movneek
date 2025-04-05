@@ -10,7 +10,7 @@
   <script src="https://kit.fontawesome.com/8e3f3e5f4e.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- Background Overlay -->
+  <!-- Background Overlay (Always Default BG) -->
   <div class="background-overlay"></div>
 
   <!-- Load header and menu -->
@@ -26,32 +26,30 @@
 
   <main>
     <section class="movie-info-section">
+      <!-- Dynamic blurred backdrop set by JS -->
+      <div class="movie-backdrop-blur" id="movie-backdrop-blur"></div>
+
+      <!-- Embed Video First -->
+      <div class="movie-embed-video">
+        <iframe id="movie-player" width="100%" height="480" src="" frameborder="0" allowfullscreen></iframe>
+      </div>
+
+      <!-- Source Buttons -->
+      <div class="source-buttons" id="source-buttons">
+        <button id="source1-button">Source 1</button>
+        <button id="source2-button">Source 2</button>
+        <div id="additional-sources"></div>
+      </div>
+
+      <!-- Poster & Info -->
       <div class="movie-info-container">
-        <!-- Embed Video Section -->
-        <div class="movie-embed-video">
-          <div id="embed-video-container">
-            <iframe id="movie-player" width="100%" height="480" src="" frameborder="0" allowfullscreen></iframe>
-          </div>
-        </div>
-
-        <!-- Source Buttons -->
-        <div id="source-buttons">
-          <button id="source1-button">Source 1</button>
-          <button id="source2-button">Source 2</button>
-        </div>
-
-        <!-- Poster Section -->
         <div class="movie-poster">
           <img id="movie-poster" src="" alt="Movie Poster" />
         </div>
 
-        <!-- Movie Details Section -->
         <div class="movie-details">
           <h2 id="movie-title"></h2>
           <p id="movie-overview"></p>
-
-          <!-- Additional Sources -->
-          <div id="additional-sources"></div>
 
           <div id="movie-info">
             <p><strong>Release Date:</strong> <span id="release-date"></span></p>
@@ -66,7 +64,7 @@
 
   <script>
     const API_KEY = "e3afd4c89e3351edad9e875ff7a01f0c";
-    const IMG_URL = "https://image.tmdb.org/t/p/w500";
+    const IMG_URL = "https://image.tmdb.org/t/p/";
     const FALLBACK_POSTER = "Assets/Images/Black%20and%20White%20Modern%20Coming%20soon%20Poster.png";
 
     const movieId = new URLSearchParams(window.location.search).get('id');
@@ -74,7 +72,7 @@
 
     fetch(movieURL)
       .then(res => res.json())
-      .then(movie => {
+      .then(async movie => {
         const movieTitle = document.getElementById("movie-title");
         const movieOverview = document.getElementById("movie-overview");
         const releaseDate = document.getElementById("release-date");
@@ -83,71 +81,56 @@
         const language = document.getElementById("language");
         const moviePoster = document.getElementById("movie-poster");
 
-        // Set movie details
         movieTitle.textContent = movie.title || movie.name;
         movieOverview.textContent = movie.overview || "No description available.";
         releaseDate.textContent = movie.release_date || "N/A";
         rating.textContent = movie.vote_average || "N/A";
-        language.textContent = movie.original_language.toUpperCase() || "N/A";
+        language.textContent = movie.original_language?.toUpperCase() || "N/A";
         genres.textContent = movie.genres.map(genre => genre.name).join(", ") || "N/A";
 
-        // Set poster and background
-        const poster = movie.poster_path ? IMG_URL + movie.poster_path : FALLBACK_POSTER;
-        moviePoster.src = poster;
-        document.querySelector('.background-overlay').style.backgroundImage = `url(${poster})`;
+        // Set Poster (Portrait)
+        moviePoster.src = movie.poster_path ? IMG_URL + "w342" + movie.poster_path : FALLBACK_POSTER;
 
-        // Dynamic Sources
-        const additionalSources = movie.TMDBID ? fetchAdditionalSources(movie.TMDBID) : [];
+        // Set Backdrop (Blurred Background)
+        if (movie.backdrop_path) {
+          document.getElementById("movie-backdrop-blur").style.backgroundImage = `url(${IMG_URL}w780${movie.backdrop_path})`;
+        }
 
-        const source1Button = document.getElementById("source1-button");
-        const source2Button = document.getElementById("source2-button");
-
-        source1Button.onclick = () => {
-          const source1URL = `https://vidsrc.to/embed/movie/${movieId}`;
-          document.getElementById("movie-player").src = source1URL;
+        // Source buttons
+        document.getElementById("source1-button").onclick = () => {
+          document.getElementById("movie-player").src = `https://vidsrc.to/embed/movie/${movieId}`;
         };
 
-        source2Button.onclick = () => {
-          const source2URL = `https://embed.su/embed/movie/${movieId}`;
-          document.getElementById("movie-player").src = source2URL;
+        document.getElementById("source2-button").onclick = () => {
+          document.getElementById("movie-player").src = `https://embed.su/embed/movie/${movieId}`;
         };
 
-        additionalSources.forEach((source, index) => {
-          const sourceButton = document.createElement("button");
-          sourceButton.textContent = source.title;
-          sourceButton.onclick = () => {
-            const embedLink = getEmbedLink(source.SRC, source.VIDEOID);
-            document.getElementById("movie-player").src = embedLink;
+        const extraSources = await fetchAdditionalSources(movieId);
+        extraSources.forEach(source => {
+          const btn = document.createElement("button");
+          btn.textContent = source.title;
+          btn.onclick = () => {
+            document.getElementById("movie-player").src = getEmbedLink(source.SRC, source.VIDEOID);
           };
-          document.getElementById("additional-sources").appendChild(sourceButton);
+          document.getElementById("additional-sources").appendChild(btn);
         });
       });
 
-    // Fetch additional sources from MovieNeek.json
-    function fetchAdditionalSources(movieId) {
-      return fetch('https://raw.githubusercontent.com/animeneek/MovieNeek/main/MovieNeek.json')
-        .then(res => res.json())
-        .then(data => {
-          return data.filter(item => item.TMDBID == movieId && item.Class == "movie");
-        });
+    async function fetchAdditionalSources(id) {
+      const res = await fetch("https://raw.githubusercontent.com/animeneek/MovieNeek/main/MovieNeek.json");
+      const data = await res.json();
+      return data.filter(item => item.TMDBID == id && item.Class == "movie");
     }
 
-    // Map SRC to the respective embed link
     function getEmbedLink(src, videoId) {
-      switch (src) {
-        case "streamtape":
-          return `https://streamtape.com/v/${videoId}`;
-        case "streamwish":
-          return `https://streamwish.to/v/${videoId}`;
-        case "earnvid":
-          return `https://earnvid.com/v/${videoId}`;
-        case "mp4upload":
-          return `https://mp4upload.com/v/${videoId}`;
-        case "other":
-          return `https://other.com/v/${videoId}`;
-        default:
-          return "#";
-      }
+      const map = {
+        streamtape: `https://streamtape.com/v/${videoId}`,
+        streamwish: `https://streamwish.to/v/${videoId}`,
+        earnvid: `https://earnvid.com/v/${videoId}`,
+        mp4upload: `https://mp4upload.com/v/${videoId}`,
+        other: `https://other.com/v/${videoId}`
+      };
+      return map[src] || "#";
     }
   </script>
 </body>
