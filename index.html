@@ -3,40 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MovieNeek v13.14</title>
+  <title>MovieNeek</title>
   <link rel="icon" href="Assets/Images/MN_Favi.png" type="image/png" />
   <link rel="stylesheet" href="style.css" />
-  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/8e3f3e5f4e.js" crossorigin="anonymous"></script>
 </head>
 <body>
+  <!-- Background -->
+  <div class="background-overlay"></div>
 
-  <!-- EMBEDDED HEADER -->
-  <iframe src="header.html" class="embed-frame" scrolling="no" frameborder="0"></iframe>
-
-  <!-- EMBEDDED MENU -->
-  <iframe src="menu.html" class="embed-frame" scrolling="no" frameborder="0"></iframe>
-
-  <!-- MAIN CONTENT -->
+  <!-- Trending -->
   <main>
     <section class="slider-section">
       <h2><i class="fas fa-fire"></i> Trending Now</h2>
-      <div class="swiper-container" id="trending-slider">
-        <div class="swiper-wrapper">
-          <!-- Movie cards will be inserted here -->
-        </div>
-      </div>
+      <div class="slider" id="trending-slider"></div>
     </section>
 
     <section class="slider-section">
       <h2><i class="fas fa-star"></i> What's New</h2>
-      <div class="swiper-container" id="new-slider">
-        <div class="swiper-wrapper">
-          <!-- Movie cards will be inserted here -->
-        </div>
-      </div>
+      <div class="slider" id="new-slider"></div>
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <!-- Load header and menu -->
+  <script>
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => document.body.insertAdjacentHTML("afterbegin", data));
+
+    fetch("menu.html")
+      .then(res => res.text())
+      .then(data => document.body.insertAdjacentHTML("afterbegin", data));
+  </script>
+
+  <!-- Load movies into sliders -->
+  <script>
+    const API_KEY = "e3afd4c89e3351edad9e875ff7a01f0c";
+    const IMG_URL = "https://image.tmdb.org/t/p/w500";
+    const FALLBACK_POSTER = "Assets/Images/Black and White Modern Coming soon Poster.png";
+
+    function loadMovies(url, containerId) {
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById(containerId);
+          container.innerHTML = "";
+          data.results.forEach(movie => {
+            const div = document.createElement("div");
+            div.classList.add("movie-card");
+            div.innerHTML = `
+              <a href="movie-info.html?id=${movie.id}">
+                <img src="${movie.poster_path ? IMG_URL + movie.poster_path : FALLBACK_POSTER}" alt="${movie.title}" />
+              </a>
+            `;
+            container.appendChild(div);
+          });
+        });
+    }
+
+    loadMovies(`https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`, "trending-slider");
+    loadMovies(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}`, "new-slider");
+  </script>
 </body>
 </html>
