@@ -10,7 +10,7 @@
   <script src="https://kit.fontawesome.com/8e3f3e5f4e.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- Background -->
+  <!-- Background Overlay -->
   <div class="background-overlay"></div>
 
   <!-- Load header and menu -->
@@ -93,7 +93,7 @@
         // Set poster and background
         const poster = movie.poster_path ? IMG_URL + movie.poster_path : FALLBACK_POSTER;
         moviePoster.src = poster;
-        document.querySelector('.movie-poster').style.backgroundImage = `url(${poster})`;
+        document.querySelector('.background-overlay').style.backgroundImage = `url(${poster})`;
 
         // Dynamic Sources
         const additionalSources = movie.TMDBID ? fetchAdditionalSources(movie.TMDBID) : [];
