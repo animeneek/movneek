@@ -1,42 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>MovNeek v12.50</title>
-  <link rel="icon" href="Assets/Images/MN_Favi.png">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MovieNeek</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="Assets/Images/MN_Favi.png" type="image/png" />
+  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </head>
-<body style="background-image: url('Assets/Images/BG_001.jpg'); background-size: cover; background-position: center;">
+<body>
+  <!-- HEADER AND MENU LOAD HERE -->
+  <div id="header"></div>
+  <div id="menu"></div>
 
-  <!-- Header and Menu will load via JS -->
-
+  <!-- MAIN CONTENT -->
   <main>
     <section class="slider-section">
-      <h2>🔥 Trending Now</h2>
-      <div class="swiper trendingSlider">
-        <div class="swiper-wrapper" id="trendingSliderContent">
-          <!-- JS will populate this -->
-        </div>
+      <h2><i class="fas fa-fire"></i> Trending Now</h2>
+      <div class="swiper-container" id="trending-slider">
+        <div class="swiper-wrapper"></div>
       </div>
     </section>
 
     <section class="slider-section">
-      <h2>🆕 What's New</h2>
-      <div class="swiper newSlider">
-        <div class="swiper-wrapper" id="newSliderContent">
-          <!-- JS will populate this -->
-        </div>
+      <h2><i class="fas fa-star"></i> What's New</h2>
+      <div class="swiper-container" id="new-slider">
+        <div class="swiper-wrapper"></div>
       </div>
     </section>
   </main>
 
+  <!-- SCRIPTS -->
   <script src="script.js"></script>
-  <script>
-    fetch("header.html").then(res => res.text()).then(data => document.body.insertAdjacentHTML("afterbegin", data));
-    fetch("menu.html").then(res => res.text()).then(data => document.body.insertAdjacentHTML("afterbegin", data));
-  </script>
 </body>
 </html>
