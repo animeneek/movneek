@@ -267,7 +267,7 @@ main {
 
 .video-embed iframe {
   width: 100%;
-  height: 450px;
+  height: 600px; /* Increased height for better view */
   border-radius: 8px;
 }
 
@@ -295,6 +295,15 @@ main {
 .movie-embed-video {
   margin-bottom: 20px;
   position: relative;
+  width: 100%;
+  height: 600px; /* Ensure the same size as the video */
+}
+
+.movie-embed-video img,
+#movie-player {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
 }
 
 .source-buttons {
@@ -334,7 +343,7 @@ main {
 
 .movie-landscape img {
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 8px;
 }
 
